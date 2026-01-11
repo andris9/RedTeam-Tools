@@ -141,13 +141,14 @@ Some of the tools may be specifically designed for red teaming, while others are
 </details>
 
 <details open>
-    <summary><b>Persistence</b> 4 tools</summary>
+    <summary><b>Persistence</b> 5 tools</summary>
     <ul>
         <ul>
             <li><b><a href="#impacket">Impacket</a></b><i> Python script suite</i></li>
             <li><b><a href="#empire">Empire</a></b><i> Post-exploitation framework</i></li>
             <li><b><a href="#sharpersist">SharPersist</a></b><i> Windows persistence toolkit</i></li>
             <li><b><a href="#ligolo-ng">ligolo-ng</a></b><i> Tunneling tool that uses a TUN interface</i></li>
+            <li><b><a href="#muti-metroo">Muti Metroo</a></b><i> Userspace mesh tunneling with multi-hop routing</i></li>
         </ul>
     </ul>
 </details>
@@ -2417,6 +2418,58 @@ Full usage information can be found [here](https://github.com/nicocha30/ligolo-n
 ![image](https://user-images.githubusercontent.com/100603074/216729440-80871cad-4c06-4eb5-8e91-d083ea3f1d2b.png)
 
 *Image used from https://github.com/nicocha30/ligolo-ng#demo*
+
+### [🔙](#tool-list)[Muti Metroo](https://mutimetroo.com)
+
+Muti Metroo is a userspace mesh networking agent that creates virtual TCP tunnels across heterogeneous transport layers. It enables multi-hop routing with SOCKS5 ingress and CIDR-based exit routing, operating entirely in userspace without requiring root privileges.
+
+Unlike traditional tunneling tools, Muti Metroo provides native multi-hop mesh routing (no manual listener chaining for double pivots) and end-to-end encryption where transit nodes cannot decrypt traffic.
+
+**Features:**
+
+- Multiple transport layers: QUIC/TLS 1.3, HTTP/2, and WebSocket
+- SOCKS5 proxy ingress with optional authentication
+- Port forwarding for reverse tunnels (ngrok-style)
+- CIDR-based exit routing with DNS resolution
+- Multi-hop mesh routing with flood-based route propagation
+- End-to-end encryption: X25519 + ChaCha20-Poly1305
+- Embedded configuration for single-file deployment
+- TUN interface support via Mutiauk for transparent routing
+- No root required
+
+**Install: (Build)**
+
+```bash
+git clone git@github.com:postalsys/Muti-Metroo.git
+cd Muti-Metroo
+make build
+```
+
+**Setup: (Interactive Wizard)**
+
+```bash
+./build/muti-metroo setup
+```
+
+The wizard guides you through agent role selection (Ingress/Transit/Exit), transport configuration, TLS certificates, and peer connections.
+
+**Usage:**
+
+*Start an ingress agent with SOCKS5 proxy:*
+
+```bash
+./build/muti-metroo run -c ./config.yaml
+```
+
+*Connect through the mesh via SOCKS5:*
+
+```bash
+curl --proxy socks5h://127.0.0.1:1080 http://internal-target.local
+```
+
+*For transparent routing without per-app proxy config, use the companion tool [Mutiauk](https://mutimetroo.com/mutiauk/) which creates a TUN interface.*
+
+Full documentation available at [mutimetroo.com](https://mutimetroo.com).
 
 Privilege Escalation
 ====================
